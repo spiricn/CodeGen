@@ -13,10 +13,8 @@ if __name__ == '__main__':
     
     ctrl = Controller();
     
-    try:
-        ctrl.doController(ctrlPath, sys.argv)
-        print('Generator executed OK')
-    except Exception as e:
-        print('Error executing generator: ' + e)
+    ctrl.doController(ctrlPath, sys.argv)
+    
+    print('Done')
     
     
