@@ -1,3 +1,6 @@
+import traceback
+import sys
+
 class Generator:
     def __init__(self):
         self.workspace = {}
@@ -11,6 +14,7 @@ class Generator:
             return str( eval(code, self.workspace) )
         except Exception as e:
             print('Error evaluating expression "%s"; reason: %s' % (code, e))
+            traceback.print_exc(file=sys.stdout)
             raise
     
     def doCodeBlock(self, code):
@@ -18,6 +22,7 @@ class Generator:
             exec(code, self.workspace)
         except Exception as e:
             print('Error executing expression "%s"; reason %s' % (code, e))
+            traceback.print_exc(file=sys.stdout)
             raise
     
     def matchEnd(self, code, start):
