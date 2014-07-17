@@ -21,3 +21,12 @@ private:
 } // </wt>
 
 #endif // </<%= headerGuard %>>
+
+
+<%for i in range(10):
+testA
+	testB
+		testC
+%>
+
+
