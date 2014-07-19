@@ -32,15 +32,13 @@ class Advanced(unittest.TestCase):
         Basic file including from a directory test.
         '''
         
-        inputString = '<% include include_file1.py >\n<% include include_file2.py >\n'
+        inputString = '<% include include_file1.py %>\n<% include include_file2.py %>\n'
         
         generator = Generator()
         
         generator.addSearchPath( INCLUDE_DIR_PATH )
         
-        generator.process(inputString)
-        
-        output = generator.getResult()
+        output = generator.process(inputString)
         
         expected = 'include1 content\ninclude2 content\n'
 
@@ -52,15 +50,13 @@ class Advanced(unittest.TestCase):
         Recursive file including from a directory.
         '''
         
-        inputString = '<% include include_recursive.py >'
+        inputString = '<% include include_recursive.py %>'
     
         generator = Generator()
         
         generator.addSearchPath( INCLUDE_DIR_PATH )
         
-        generator.process(inputString)
-        
-        output = generator.getResult()
+        output = generator.process(inputString)
         
         expected = 'include recursive\ninclude1 content\n'
 
@@ -72,20 +68,37 @@ class Advanced(unittest.TestCase):
         Custom include handler test.
         '''
         
-        inputString = '<% include include_file1.py >'
+        inputString = '<% include include_file1.py %>'
     
         generator = Generator()
         
         generator.addSearchHandler( IncludeHandler(INCLUDE_DIR_PATH) )
         
-        generator.process(inputString)
-        
-        output = generator.getResult()
+        output = generator.process(inputString)
         
         expected = 'include1 content'
 
         # Input should be the same as output
         self.assertEqual( output, expected)
+        
+    def test_advancedLoops(self):
+        '''
+        Multi variable for loop test.
+        '''
+        
+        input='''\
+<% code %>
+array = ['a', 'b', 'c']
+<~ code %>
+<% for c,i in enumerate(array) %>
+array[<= c %>] = <= i %><~ for %>
+'''
+
+        output = Generator.convert(input)
+                
+        expected = 'array[0] = aarray[1] = barray[2] = c'
+        
+        self.assertEqual( output, expected )
         
 if __name__ == '__main__':
     unittest.main()

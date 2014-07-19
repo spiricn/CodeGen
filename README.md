@@ -3,45 +3,44 @@
 
 ### Usage:
 
-	<% code >
+	<% code %>
     
         # Content
     
-    <~ code >
+    <~ code %>
 
 
-    
 ### Example:
-
 
 #### Input string:
 
-	<% code >
+	<% code %>
 	
 	a = 1
 	b = 2
 	c = a + b
 		
-	<~ c > 
+	<~ c %> 
 
 -------------------------------------------------------------------------------
 ## Evaluation expressions
 
 ### Usage:
 
-	<= expression >
-    
+	<= expression %>
+
+
 ### Example:
 
 #### Input:
-	<% code >
+	<% code %>
 	
 	a = 2 + 2
 	
-	<~ code>
+	<~ code %>
 	
 	
-	Value of a is <= a >.
+	Value of a is <= a %>.
 	
 #### Output:
 	Value of a is 4.
@@ -50,35 +49,36 @@
 ## Conditional statements
 
 ### Usage:
-    <% if 'conditional_expression' >
+    <% if 'conditional_expression' %>
     
         # Content
     
-    <% elif 'another_expression' >
+    <% elif 'another_expression' %>
     
         # Content
 		
-	<% else >
+	<% else %>
 	
 		# Content
 		
-    <~ if >
-    
+    <~ if %>
+
 ### Example:
 
+
 #### Input:
-	<% code >
+	<% code %>
 		a = 23
 		b = 32
 		printA = False
 		printB = True
-	<~ code >
+	<~ code %>
 
-	<% if printA >
-		Value of a is <= a >.
-	<% elif printB >
-		Value of b is <= b >.
-	<~ if >
+	<% if printA %>
+		Value of a is <= a %>.
+	<% elif printB %>
+		Value of b is <= b %>.
+	<~ if %>
 	
 #### Output:
 	Value of b is 32.
@@ -88,26 +88,27 @@
 
 
 ### Usage:
-    <% for 'values' in 'container' >
+    <% for 'values' in 'container' %>
     
         # Content
     
-    <~ for >
-    
+    <~ for %>
+
+
 ### Example:
 
 #### Input:
-	<% for i in range(2) >
+	<% for i in range(2) %>
 	
-		Value of i is <= i >.
+		Value of i is <= i %>.
 		
-		<% if i == 0 >
+		<% if i == 0 %>
 			First iteration.
-		<% elif i == 1 >
+		<% elif i == 1 %>
 			Second iteration.
-		<~ if >
+		<~ if %>
 		
-	<~ for>
+	<~ for %>
 	
 #### Output:
 	Value of i is 0.
@@ -127,21 +128,21 @@ is not found in any of those locations, custom handlers added via
 "Generator.addSearchHandler" are invoked allowing for "memory" file loading.
 
 ### Usage:
-	<% include file_name.py >
+	<% include file_name.py %>
+
 
 ### Example:
-	
 
 #### example_file.py contents:
     Hello from example_file.py!
-    <% code >
+    <% code %>
         example_file_var = 42
-    <~ code> 
+    <~ code %> 
 		
 #### Input:
-    <% include example_file.py >
+    <% include example_file.py %>
 	
-    Value of example file var is <= example_file_var >.
+    Value of example file var is <= example_file_var %>.
 
 #### Output:
     Hello from example_file.py!

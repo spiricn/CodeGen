@@ -20,15 +20,15 @@ class Basic(unittest.TestCase):
         
         inputString = '''\
 First line.
-<% code >
+<% code %>
 a = 2
 b = 3
 c = a+b
-<~ code >
+<~ code %>
 Second line.
-<% code >
+<% code %>
 d = a+b+c
-<~ code >
+<~ code %>
 '''
         expected = 'First line.\nSecond line.\n'
         
@@ -43,10 +43,10 @@ d = a+b+c
         
         inputString = '''\
 First line.
-<% code >
+<% code %>
 a = 3; b = 4; c = a+b;
-<~ code >
-Value of c is <= c >
+<~ code %>
+Value of c is <= c %>
 '''
         
         expected = 'First line.\nValue of c is 7\n'
@@ -62,9 +62,9 @@ Value of c is <= c >
         '''
         
         inputString = '''\
-<% if True and 1 == 1 >
+<% if True and 1 == 1 %>
 Pass
-<~ if >
+<~ if %>
 '''
         expected = 'Pass\n'
         
@@ -78,24 +78,24 @@ Pass
         '''
         
         inputString ='''\
-<% if True and 0 >
-<~ if >
-<% if True or 3 == 4 >
-Pass if<~ if >
-<% if False and True >
+<% if True and 0 %>
+<~ if %>
+<% if True or 3 == 4 %>
+Pass if<~ if %>
+<% if False and True %>
 Pass if
-<~ if >
-<% if False and 3 == 3 >
+<~ if %>
+<% if False and 3 == 3 %>
 Fail
-<% elif True or False >
-Pass elif<~ if >
-<% if False and True >
+<% elif True or False %>
+Pass elif<~ if %>
+<% if False and True %>
 Fail
-<% elif False and True >
+<% elif False and True %>
 Fail
-<% else >
+<% else %>
 Pass else
-<~ if >
+<~ if %>
 '''
         output = Generator.convert(inputString)
         
@@ -109,9 +109,9 @@ Pass else
         '''
         
         inputString = '''\
-<% for i in range(3) >
+<% for i in range(3) %>
 a
-<~ for >
+<~ for %>
 '''
         expected ='''\
 a
@@ -128,13 +128,13 @@ a
         '''
         
         inputString = '''\
-<% for i in range(50) >
-<~ for >
-<% for i in range(2) >
-a<~ for >
-<% for i in range(3) >
+<% for i in range(50) %>
+<~ for %>
+<% for i in range(2) %>
+a<~ for %>
+<% for i in range(3) %>
 b
-<~ for >
+<~ for %>
 '''
         output = Generator.convert(inputString)
         

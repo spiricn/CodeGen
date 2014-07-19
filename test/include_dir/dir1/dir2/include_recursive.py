@@ -1,2 +1,2 @@
 include recursive
-<% include include_file1.py >
+<% include include_file1.py %>

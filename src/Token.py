@@ -46,9 +46,9 @@ class ConditionalToken(Token):
         self.query = None
         
         if self.type == TOKEN_CONDITIONAL_IF:
-            self.query = body[len('<% if '):-2]
+            self.query = body[len('<% if '):-3]
         elif self.type == TOKEN_CONDITIONAL_ELIF:
-            self.query = body[len('<% elif '):-2] 
+            self.query = body[len('<% elif '):-3] 
                    
 class TextToken(Token):
     def __init__(self, type, body):
@@ -66,7 +66,7 @@ class LoopToken(Token):
         self.container = None
         
         if self.type == TOKEN_LOOP_START:
-            loop = self.body[len('<% for '):-2]
+            loop = self.body[len('<% for '):-3]
             
             self.vars = loop.split(' in ')[0].replace(' ', '')
         
@@ -76,10 +76,10 @@ class EvalToken(Token):
     def __init__(self, type, body):
         Token.__init__(self, type, body)
         
-        self.expression = self.body[len('<= '):-2] 
+        self.expression = self.body[len('<= '):-3] 
         
 class IncludeToken(Token):
     def __init__(self, type, body):
         Token.__init__(self, type, body)
 
-        self.file = body[len('<% include '):-2]
+        self.file = body[len('<% include '):-3]

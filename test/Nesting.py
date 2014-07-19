@@ -11,20 +11,20 @@ class Nesting(unittest.TestCase):
         '''
         
         input = '''\
-<% code >
+<% code %>
 a = 42
-<~ code >
-<% if True >
-<% if False >
+<~ code %>
+<% if True %>
+<% if False %>
 Fail
-<% else >
+<% else %>
 Inner conditional
-<~ if >
-<% for i in range(2) >
+<~ if %>
+<% for i in range(2) %>
 Inner loop
-<~ for >
-Inner eval <= a >
-<~ if >
+<~ for %>
+Inner eval <= a %>
+<~ if %>
 '''
         expected = 'Inner conditional\nInner loop\nInner loop\nInner eval 42\n'
         
@@ -38,17 +38,17 @@ Inner eval <= a >
         '''
         
         input = '''\
-<% for i in range(2) >
-<% if i == 0 >
+<% for i in range(2) %>
+<% if i == 0 %>
 First iteration if
-<% elif i == 1 >
+<% elif i == 1 %>
 Second iteration if
-<~ if >
-i=<= i >
-<% for j in range(2) >
-Inner loop j=<= j >
-<~ for >
-<~ for >
+<~ if %>
+i=<= i %>
+<% for j in range(2) %>
+Inner loop j=<= j %>
+<~ for %>
+<~ for %>
 '''
         expected = "First iteration if\ni=0\nInner loop j=0\nInner loop j=1\nSecond iteration if\ni=1\nInner loop j=0\nInner loop j=1\n"
         

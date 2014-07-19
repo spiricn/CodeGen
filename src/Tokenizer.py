@@ -108,12 +108,12 @@ class Tokenizer:
         
         end = -1
         
-        while idx < stringLen -1 :
+        while idx < stringLen - 1 :
             if string[idx] == '<' and ( (string[idx+1] == '%' or string[idx+1] == '=') or string[idx+1] == '~' ):
                 start = idx
                 
-            elif string[idx] == '>' and string[idx+1] == '\n':
-                end = idx+1
+            elif string[idx] == '%' and string[idx+1] == '>':
+                end = idx+2
                 break
                 
             idx += 1

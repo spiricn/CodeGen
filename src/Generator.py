@@ -28,9 +28,6 @@ class FileSystemIncludeHandler:
     
 class Generator:
     def __init__(self):
-        # Resulting string
-        self.__result = ''
-        
         # Code workspace
         self.workspace = {}
         
@@ -39,6 +36,9 @@ class Generator:
         self.__searchHandlers = [ self.__fileIncludeHandler ]
         
     def process(self, string):
+        # Resulting string
+        self.__result = ''
+        
         # Create a root node
         rootNode = ContainerNode(self)
         
@@ -57,15 +57,14 @@ class Generator:
         
         # Execute the root node
         rootNode.execute()
+        
+        return self.__result
     
     def addSearchPath(self, path):
         self.__fileIncludeHandler.addSearchPath( path )
         
     def addSearchHandler(self, handler):
         self.__searchHandlers.append( handler )
-        
-    def getResult(self):
-        return self.__result
         
     def __getIncludeContent(self, file):
         for handler in self.__searchHandlers:
@@ -157,33 +156,29 @@ class Generator:
 
     @staticmethod
     def convert(string):
-        g = Generator()
-        
-        g.process(string)
-        
-        return g.getResult()
+        return Generator().process(string)
     
     # Types of tokens we're after (order matters!)
     __tokenTypes = [
         # Conditional
-        TokenType('^<% if .* >$', TOKEN_CONDITIONAL_IF, ConditionalToken),
-        TokenType('^<% else >$', TOKEN_CONDITIONAL_ELSE, ConditionalToken),
-        TokenType('^<% elif .* >$', TOKEN_CONDITIONAL_ELIF, ConditionalToken),
-        TokenType('^<~ if >$', TOKEN_CONDITIONAL_END, ConditionalToken),
+        TokenType('^<% if .* %>$', TOKEN_CONDITIONAL_IF, ConditionalToken),
+        TokenType('^<% else %>$', TOKEN_CONDITIONAL_ELSE, ConditionalToken),
+        TokenType('^<% elif .* %>$', TOKEN_CONDITIONAL_ELIF, ConditionalToken),
+        TokenType('^<~ if %>$', TOKEN_CONDITIONAL_END, ConditionalToken),
         
         # Code
-        TokenType('^<% code >$', TOKEN_CODE_START, CodeToken),
-        TokenType('^<~ code >$', TOKEN_CODE_END, CodeToken),
+        TokenType('^<% code %>$', TOKEN_CODE_START, CodeToken),
+        TokenType('^<~ code %>$', TOKEN_CODE_END, CodeToken),
         
         # Loop
-        TokenType('^<% for .* >$', TOKEN_LOOP_START, LoopToken),
-        TokenType('^<~ for >$', TOKEN_LOOP_END, LoopToken),
+        TokenType('^<% for .* %>$', TOKEN_LOOP_START, LoopToken),
+        TokenType('^<~ for %>$', TOKEN_LOOP_END, LoopToken),
         
         # Eval
-        TokenType('^<= .* >$', TOKEN_EVAL, EvalToken),
+        TokenType('^<= .* %>$', TOKEN_EVAL, EvalToken),
         
         # Include
-        TokenType('^<% include .* >$', TOKEN_INCLUDE, IncludeToken),
+        TokenType('^<% include .* %>$', TOKEN_INCLUDE, IncludeToken),
         
         # Text if all else fails
         TokenType('.*', TOKEN_TEXT, TextToken)
