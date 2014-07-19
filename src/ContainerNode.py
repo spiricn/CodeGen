@@ -7,6 +7,10 @@ from LoopNode import LoopNode
 from Token import *
 
 class ContainerNode(Node):
+    '''
+    A node containing multiple child nodes of various types
+    '''
+    
     def __init__(self, context):
         Node.__init__(self, context, NODE_CONTAINER)
         

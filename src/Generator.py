@@ -17,10 +17,6 @@ class Generator:
         
         tokens = self.__processTokens( Tokenizer.tokenize(string) )
         
-#         print('#'*20)
-#         for i in tokens:
-#             print(i)
-      
         # Create the initial children from tokens
         self.root.createChildren( tokens )
         
@@ -57,7 +53,7 @@ class Generator:
     def createContainer(self):
         return ContainerNode(self)
 
-
     @staticmethod
     def process(string):
         return Generator(string).result
+    

@@ -4,26 +4,30 @@ Code block:
 
     <% code >
     
-        # Code
+        # Content
     
     <~ code >
 
 -------------------------------------------------------------------------------
     
 Evaluation block:
-    <= variable >
+    <= expression >
     
 -------------------------------------------------------------------------------
     
 Conditional:
     <% if 'conditional_expression' >
     
-        # Code
+        # Content
     
     <% elif 'another_expression' >
     
-        # Code
-    
+        # Content
+		
+	<% else >
+	
+		# Content
+		
     <~ if >
 
 -------------------------------------------------------------------------------
@@ -31,7 +35,7 @@ Conditional:
 For loop:
     <% for 'values' in 'container' >
     
-        # Code
+        # Content
     
     <~ for >
     

@@ -2,12 +2,16 @@ from Node import *
 from Token import *
 
 class CodeNode(Node):
+    '''
+    Node presenting a code expression to be executed.
+    '''
+    
     def __init__(self, context, tokens):
         Node.__init__(self, context, NODE_CODE)
         
         start, self.code, end = tokens[:3]
-        
-#         print(start,self.code,end)
+
+        # TODO an error message        
         assert(start.type == TOKEN_CODE_START and self.code.type == TOKEN_TEXT and end.type == TOKEN_CODE_END)
         
         tokens.pop(0)
