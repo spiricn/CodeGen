@@ -1,8 +1,9 @@
 from Token import *
 
 class Tokenizer:
-    def __init__(self, string):
+    def __init__(self, string, tokenTypes):
         self.string = string
+        self.tokenTypes = tokenTypes
         
     def next(self):
         '''
@@ -30,17 +31,18 @@ class Tokenizer:
         return res
     
     @staticmethod
-    def tokenize(string):
+    def tokenize(string, tokenTypes):
         '''
         Tokenizes an entire string.
         @return: List of all tokens the string contains
         '''
-        tokenizer = Tokenizer(string)
-        
+        return Tokenizer(string, tokenTypes).getAll()
+    
+    def getAll(self):
         tokens = []
         
         while True:
-            token = tokenizer.next()
+            token = self.next()
             
             if token:
                 tokens.append(token)
@@ -71,32 +73,14 @@ class Tokenizer:
             else:
                 # Text at the beggining
                 body = self.string[:cmd[0]]
-            
-            typeMap = {
-                # Conditional
-                TOKEN_CONDITIONAL_IF : ConditionalToken,
-                TOKEN_CONDITIONAL_ELSE : ConditionalToken,
-                TOKEN_CONDITIONAL_ELIF : ConditionalToken,
-                TOKEN_CONDITIONAL_END : ConditionalToken,
+
+            for entry in self.tokenTypes:
+                if entry.matches(body):
+                    token = entry.instantiate(body)
+                    break
                 
-                # Text
-                TOKEN_TEXT : ConditionalToken,
-                
-                # Code
-                TOKEN_CODE_START : CodeToken,
-                TOKEN_CODE_END: CodeToken,
-                
-                # Loop
-                TOKEN_LOOP_START : LoopToken,
-                TOKEN_LOOP_END : LoopToken,
-                
-                # Eval
-                TOKEN_EVAL : EvalToken
-            }
-            
-            type = self.__getTokenType(body)
-            
-            token = typeMap[type](type, body)
+            if token == None:
+                print('Token not matched')
             
             tokens.append( token )
             
@@ -124,11 +108,9 @@ class Tokenizer:
         
         end = -1
         
-        while idx < stringLen:
+        while idx < stringLen -1 :
             if string[idx] == '<' and ( (string[idx+1] == '%' or string[idx+1] == '=') or string[idx+1] == '~' ):
                 start = idx
-                
-                
                 
             elif string[idx] == '>' and string[idx+1] == '\n':
                 end = idx+1
@@ -140,39 +122,3 @@ class Tokenizer:
             return None
         else:
             return [start, end]
-        
-    @staticmethod
-    def __getTokenType(body):
-        # Code
-        if body == '<% code >':
-            return TOKEN_CODE_START
-        
-        elif body == '<~ code >':
-            return TOKEN_CODE_END
-        
-        # Evaluation
-        elif body.startswith('<= ') and body.endswith(' >'):
-            return TOKEN_EVAL
-        
-        # Conditional
-        elif body.startswith('<% if ') and body.endswith(' >'):
-            return TOKEN_CONDITIONAL_IF
-        
-        elif body.startswith('<% elif ') and body.endswith(' >'):
-            return TOKEN_CONDITIONAL_ELIF
-        
-        elif body == '<% else >':
-            return TOKEN_CONDITIONAL_ELSE
-        
-        elif body == '<~ if >':
-            return TOKEN_CONDITIONAL_END
-        
-        # Loop
-        elif body.startswith('<% for ') and body.endswith(' >'):
-            return TOKEN_LOOP_START
-        
-        elif body == '<~ for >':
-            return TOKEN_LOOP_END
-        
-        else:
-            return TOKEN_TEXT

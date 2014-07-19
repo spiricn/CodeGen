@@ -17,7 +17,7 @@ class EvalNode(Node):
     def execute(self):
         try:
             # Try to evaluate the expression
-            self.context.result += str( eval(self.token.expression, self.context.workspace) )
+            self.context.write( str( eval(self.token.expression, self.context.workspace) ) )
         except Exception as e:
             # Expression could not be evalulated
             print('Error evaluating expression "%s"; reason: %s' % (self.token.expression, e))

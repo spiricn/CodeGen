@@ -6,15 +6,19 @@ class Basic(unittest.TestCase):
         pass
 
     def test_basic(self):
-        input = '\nFirst line.\nSecond line\nThird line.\n'
+        inputString = '\nFirst line.\nSecond line\nThird line.\n'
         
-        output = Generator.process(input)
+        output = Generator.convert(inputString)
         
         # Input should be the same as output
-        self.assertEqual( input, output )
+        self.assertEqual( inputString, output )
         
     def test_code(self):
-        input = '''\
+        '''
+        Simple code tags test.
+        '''
+        
+        inputString = '''\
 First line.
 <% code >
 a = 2
@@ -28,12 +32,16 @@ d = a+b+c
 '''
         expected = 'First line.\nSecond line.\n'
         
-        output = Generator.process(input)
+        output = Generator.convert(inputString)
         
         self.assertEqual( output, expected )
         
     def test_eval(self):
-        input = '''\
+        '''
+        Simple evaluation tag test.
+        '''
+        
+        inputString = '''\
 First line.
 <% code >
 a = 3; b = 4; c = a+b;
@@ -43,25 +51,33 @@ Value of c is <= c >
         
         expected = 'First line.\nValue of c is 7\n'
         
-        output = Generator.process(input)
+        output = Generator.convert(inputString)
         
         self.assertEqual( output, expected )
         
         
     def test_basicConditional(self):
-        input = '''\
+        '''
+        Simple conditional tag test.
+        '''
+        
+        inputString = '''\
 <% if True and 1 == 1 >
 Pass
 <~ if >
 '''
         expected = 'Pass\n'
         
-        output = Generator.process(input)
+        output = Generator.convert(inputString)
         
         self.assertEqual( output, expected )        
     
     def test_multiConditional(self):
-        input ='''\
+        '''
+        Multi conditional tag test.
+        '''
+        
+        inputString ='''\
 <% if True and 0 >
 <~ if >
 <% if True or 3 == 4 >
@@ -81,14 +97,18 @@ Fail
 Pass else
 <~ if >
 '''
-        output = Generator.process(input)
+        output = Generator.convert(inputString)
         
         expected = 'Pass ifPass elifPass else\n'
         
         self.assertEqual( output, expected )
         
     def test_basicloop(self):
-        input = '''\
+        '''
+        Basic loop test.
+        '''
+        
+        inputString = '''\
 <% for i in range(3) >
 a
 <~ for >
@@ -98,12 +118,16 @@ a
 a
 a
 '''
-        output = Generator.process(input)
+        output = Generator.convert(inputString)
         
         self.assertEqual(output, expected)
         
     def test_multiLoop(self):
-        input = '''\
+        '''
+        Multi loop test.
+        '''
+        
+        inputString = '''\
 <% for i in range(50) >
 <~ for >
 <% for i in range(2) >
@@ -112,7 +136,7 @@ a<~ for >
 b
 <~ for >
 '''
-        output = Generator.process(input)
+        output = Generator.convert(inputString)
         
         expected = 'aab\nb\nb\n'
         

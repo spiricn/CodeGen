@@ -11,7 +11,8 @@ TOKEN_CONDITIONAL_ELSE, \
 TOKEN_CONDITIONAL_END,  \
 TOKEN_LOOP_START,       \
 TOKEN_LOOP_END,         \
-= range(11)
+TOKEN_INCLUDE,          \
+= range(12)
 
 class Token(object):
     def __init__(self, type, body):
@@ -30,7 +31,9 @@ class Token(object):
          TOKEN_CONDITIONAL_ELSE : 'CONDITIONAL_ELSE',
          TOKEN_CONDITIONAL_END : 'CONDITIONAL_END',
          TOKEN_LOOP_START : 'LOOP_START',
-         TOKEN_LOOP_END : 'LOOP_END'}[self.type]
+         TOKEN_LOOP_END : 'LOOP_END',
+         TOKEN_INCLUDE : 'INCLUDE'
+        }[self.type]
          
     def __str__(self):
         return '<Token %s>' % self.getTypeName()
@@ -75,3 +78,8 @@ class EvalToken(Token):
         
         self.expression = self.body[len('<= '):-2] 
         
+class IncludeToken(Token):
+    def __init__(self, type, body):
+        Token.__init__(self, type, body)
+
+        self.file = body[len('<% include '):-2]

@@ -6,6 +6,10 @@ class Nesting(unittest.TestCase):
         pass
      
     def test_basicIf(self):
+        '''
+        Basic nested if tag test
+        '''
+        
         input = '''\
 <% code >
 a = 42
@@ -24,11 +28,15 @@ Inner eval <= a >
 '''
         expected = 'Inner conditional\nInner loop\nInner loop\nInner eval 42\n'
         
-        output = Generator.process(input)
+        output = Generator.convert(input)
         
         self.assertEqual( output, expected )
         
     def test_basicFor(self):
+        '''
+        Basic nested for tag test.
+        '''
+        
         input = '''\
 <% for i in range(2) >
 <% if i == 0 >
@@ -44,7 +52,7 @@ Inner loop j=<= j >
 '''
         expected = "First iteration if\ni=0\nInner loop j=0\nInner loop j=1\nSecond iteration if\ni=1\nInner loop j=0\nInner loop j=1\n"
         
-        output = Generator.process(input)
+        output = Generator.convert(input)
         
         self.assertEqual( output, expected )
 
