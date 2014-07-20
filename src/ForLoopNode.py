@@ -1,7 +1,7 @@
 from ContainerNode import *
 from Token import *
 
-class LoopNode(Node):
+class ForLoopNode(Node):
     '''
     Node representing a for loop.
     '''
@@ -19,7 +19,7 @@ class LoopNode(Node):
         while len(tokens):
             token = tokens[0]
             
-            if token.type == TOKEN_LOOP_END:
+            if token.type == TOKEN_FOR_LOOP_END:
                 # Found the end
                 tokens.pop(0)
                 break

@@ -9,10 +9,12 @@ TOKEN_CONDITIONAL_IF,   \
 TOKEN_CONDITIONAL_ELIF, \
 TOKEN_CONDITIONAL_ELSE, \
 TOKEN_CONDITIONAL_END,  \
-TOKEN_LOOP_START,       \
-TOKEN_LOOP_END,         \
+TOKEN_FOR_LOOP_START,       \
+TOKEN_FOR_LOOP_END,         \
 TOKEN_INCLUDE,          \
-= range(12)
+TOKEN_WHILE_LOOP_START,      \
+TOKEN_WHILE_LOOP_END,        \
+= range(14)
 
 class Token(object):
     def __init__(self, type, body):
@@ -30,9 +32,12 @@ class Token(object):
          TOKEN_CONDITIONAL_ELIF : 'CONDITIONAL_ELIF',
          TOKEN_CONDITIONAL_ELSE : 'CONDITIONAL_ELSE',
          TOKEN_CONDITIONAL_END : 'CONDITIONAL_END',
-         TOKEN_LOOP_START : 'LOOP_START',
-         TOKEN_LOOP_END : 'LOOP_END',
-         TOKEN_INCLUDE : 'INCLUDE'
+         TOKEN_FOR_LOOP_START : 'FOR_LOOP_START',
+         TOKEN_FOR_LOOP_END : 'FOR_LOOP_END',
+         TOKEN_INCLUDE : 'INCLUDE',
+         TOKEN_WHILE_LOOP_START : 'WHILE_LOOP_START',
+         TOKEN_WHILE_LOOP_END : 'WHILE_LOOP_END',
+         
         }[self.type]
          
     def __str__(self):
@@ -65,7 +70,7 @@ class LoopToken(Token):
         self.vars = None
         self.container = None
         
-        if self.type == TOKEN_LOOP_START:
+        if self.type == TOKEN_FOR_LOOP_START:
             loop = self.body[len('<% for '):-3]
             
             self.vars = loop.split(' in ')[0].replace(' ', '')
@@ -83,3 +88,13 @@ class IncludeToken(Token):
         Token.__init__(self, type, body)
 
         self.file = body[len('<% include '):-3]
+        
+
+class WhileLoopToken(Token):
+    def __init__(self, type, body):
+        Token.__init__(self, type, body)
+        
+        self.condition = None
+        
+        if self.type == TOKEN_WHILE_LOOP_START:
+            self.condition = self.body[len('<% while '):-3]

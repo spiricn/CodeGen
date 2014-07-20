@@ -142,5 +142,19 @@ b
         
         self.assertEqual(output, expected)
         
+    def test_whileLoop(self):
+        '''
+        While loop test.
+        '''
+        
+        input = "<% code %>a = 3<~ code %><% while a %>a is <= a %><% code %>a -= 1<~ code %><~ while %>"
+        
+        output = Generator.convert(input)
+        
+        expected = 'a is 3a is 2a is 1'
+
+        self.assertEqual(output, expected)
+        
+        
 if __name__ == '__main__':
     unittest.main()

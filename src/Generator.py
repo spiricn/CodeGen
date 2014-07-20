@@ -100,8 +100,8 @@ class Generator:
             
             token = tokens[0]
             if prevToken and (prevToken.type in [TOKEN_CODE_END, TOKEN_CONDITIONAL_END, TOKEN_CONDITIONAL_IF, \
-                                                 TOKEN_CONDITIONAL_ELSE, TOKEN_CONDITIONAL_ELIF, TOKEN_LOOP_START, \
-                                                 TOKEN_LOOP_END, TOKEN_INCLUDE]):
+                                                 TOKEN_CONDITIONAL_ELSE, TOKEN_CONDITIONAL_ELIF, TOKEN_FOR_LOOP_START, \
+                                                 TOKEN_FOR_LOOP_END, TOKEN_INCLUDE, TOKEN_WHILE_LOOP_START, TOKEN_WHILE_LOOP_END]):
                 if token.type == TOKEN_TEXT:
                     if token.body == '\n':
                         # Remove the token
@@ -170,15 +170,19 @@ class Generator:
         TokenType('^<% code %>$', TOKEN_CODE_START, CodeToken),
         TokenType('^<~ code %>$', TOKEN_CODE_END, CodeToken),
         
-        # Loop
-        TokenType('^<% for .* %>$', TOKEN_LOOP_START, LoopToken),
-        TokenType('^<~ for %>$', TOKEN_LOOP_END, LoopToken),
+        # For loop
+        TokenType('^<% for .* %>$', TOKEN_FOR_LOOP_START, LoopToken),
+        TokenType('^<~ for %>$', TOKEN_FOR_LOOP_END, LoopToken),
         
         # Eval
         TokenType('^<= .* %>$', TOKEN_EVAL, EvalToken),
         
         # Include
         TokenType('^<% include .* %>$', TOKEN_INCLUDE, IncludeToken),
+        
+        # While loop
+        TokenType('^<% while .* %>$', TOKEN_WHILE_LOOP_START, WhileLoopToken),
+        TokenType('^<~ while %>$', TOKEN_WHILE_LOOP_END, WhileLoopToken),
         
         # Text if all else fails
         TokenType('.*', TOKEN_TEXT, TextToken)

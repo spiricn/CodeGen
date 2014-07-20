@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 ## Code block
 
-### Usage:
 
+### Usage:
 	<% code %>
     
         # Content
@@ -13,7 +13,6 @@
 ### Example:
 
 #### Input string:
-
 	<% code %>
 	
 	a = 1
@@ -23,7 +22,8 @@
 	<~ c %> 
 
 -------------------------------------------------------------------------------
-## Evaluation expressions
+## Expression evaluation
+
 
 ### Usage:
 
@@ -48,6 +48,7 @@
 -------------------------------------------------------------------------------
 ## Conditional statements
 
+
 ### Usage:
     <% if 'conditional_expression' %>
     
@@ -63,8 +64,8 @@
 		
     <~ if %>
 
-### Example:
 
+### Example:
 
 #### Input:
 	<% code %>
@@ -82,7 +83,7 @@
 	
 #### Output:
 	Value of b is 32.
-		
+
 -------------------------------------------------------------------------------
 ## For loop
 
@@ -116,9 +117,44 @@
 	
 	Value of i is 1.
 	Second iteration.
-    
+
+-------------------------------------------------------------------------------
+## While loop
+
+
+### Usage:
+	<% while 'condition' %>
+	
+		# Content
+		
+	<~ while %>
+
+
+### Example:
+
+#### Input:
+	<% code %>
+	a = 3
+	<~ code %>
+	
+	<% while a > 0 %>
+	
+		Value of a is <= a >
+		
+		<% code %>
+			a -= 1
+		<~ code >
+	
+	<~ while %>
+
+#### Output:
+	Value of a is 3
+	Value of a is 2
+	Value of a is 1
+
 -------------------------------------------------------------------------------
 ## include tag
+
 
 ### Description:
 

@@ -3,7 +3,8 @@ from TextNode import TextNode
 from CodeNode import CodeNode
 from ConditionalNode import ConditionalNode
 from EvalNode import EvalNode
-from LoopNode import LoopNode 
+from ForLoopNode import ForLoopNode
+from WhileLoopNode import WhileLoopNode 
 from Token import *
 
 class ContainerNode(Node):
@@ -40,8 +41,11 @@ class ContainerNode(Node):
         elif token.type == TOKEN_EVAL:
             self.children.append( EvalNode(self.context, tokens) )
             
-        elif token.type == TOKEN_LOOP_START:
-            self.children.append( LoopNode(self.context, tokens) )
+        elif token.type == TOKEN_FOR_LOOP_START:
+            self.children.append( ForLoopNode(self.context, tokens) )
+            
+        elif token.type == TOKEN_WHILE_LOOP_START:
+            self.children.append( WhileLoopNode(self.context, tokens) )
         else:
             assert(0)
     

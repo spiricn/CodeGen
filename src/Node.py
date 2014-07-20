@@ -5,7 +5,8 @@ NODE_CONDITIONAL, \
 NODE_EVAL, \
 NODE_LOOP, \
 NODE_CONTAINER, \
-= range(6)
+NODE_WHILE_LOOP, \
+= range(7)
 
 class Node(object):
     '''
