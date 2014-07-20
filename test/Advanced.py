@@ -2,7 +2,11 @@ from Generator import *
 import unittest
 import os
 
-INCLUDE_DIR_PATH = './include_dir/dir1/dir2'
+RESOURCE_DIR = './rsrc'
+
+INCLUDE_DIR_PATH = os.path.join(RESOURCE_DIR, 'include_dir')
+
+TMP_DIR = os.path.join( RESOURCE_DIR, 'tmp' )
 
 class IncludeHandler:
     '''
@@ -100,5 +104,85 @@ array[<= c %>] = <= i %><~ for %>
         
         self.assertEqual( output, expected )
         
+    def test_fileToMemoryProcess(self):
+        '''
+        Basic file to memory processing test.
+        '''
+        g = Generator()
+        
+        res = g.processFile( os.path.join(RESOURCE_DIR, 'test_template_1.py') )
+        
+        expected = 'Value of a is 42'
+        
+        self.assertEqual(res, expected)
+        
+    def test_fileToFileProcess(self):
+        '''
+        Basic file to file processing.
+        '''
+        g = Generator()
+        
+        outPath = os.path.join(TMP_DIR, "out_test_tmp1.py")
+        
+        # Delete the file if it exists
+        if os.path.exists(outPath):
+            os.remove(outPath)
+        
+        g.processFile( os.path.join(RESOURCE_DIR, 'test_template_1.py'), outPath)
+        
+        # Read the contents of the created file
+        result = open(outPath, 'r').read() 
+        
+        expected = 'Value of a is 42'
+        
+        self.assertEqual(result, expected)
+        
+        # Cleanup
+        if os.path.exists(outPath):
+            os.remove(outPath)
+        
+    def test_fileToFileOverwrite(self):
+        '''
+        Basic file to file processing (with overwrite).
+        '''
+        
+        outPath = os.path.join(TMP_DIR, "out_test_tmp1.py")
+        
+        # Create a temporary file
+        file = open(outPath, 'w')
+
+        file.close()        
+        
+        self.assertTrue( os.path.exists(outPath) )
+         
+        generator = Generator()
+        
+        inPath = os.path.join(RESOURCE_DIR, 'test_template_1.py')
+        
+        
+        # Try to convert a file without setting the flag (expected to fail)
+        try:
+            generator.processFile(inPath, outPath, 0)
+            self.fail("File overwritten without specifying the overwrite flag")
+        except Exception:
+            pass
+        
+        # Try to convert a file with the flag (should pass)
+        try:
+            generator.processFile(inPath, outPath,  Generator.FLAG_OVERWRITE )
+        except Exception:
+            self.fail("File not overrwriten after specifying overwrite flag")
+        
+        # Read the contents of the created file
+        result = open(outPath, 'r').read() 
+         
+        expected = 'Value of a is 42'
+         
+        self.assertEqual(result, expected)
+        
+        # Cleanup
+        if os.path.exists(outPath):
+            os.remove(outPath)
+            
 if __name__ == '__main__':
     unittest.main()

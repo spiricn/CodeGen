@@ -34,7 +34,11 @@ class FileSystemIncludeHandler:
 
         return None
     
+    
+    
 class Generator:
+    FLAG_OVERWRITE = 1 << 0
+    
     def __init__(self):
         # Code workspace
         self.workspace = {}
@@ -42,6 +46,19 @@ class Generator:
         self.__fileIncludeHandler = FileSystemIncludeHandler()
         
         self.__searchHandlers = [ self.__fileIncludeHandler ]
+        
+    def processFile(self, inputFilePath, outputFilePath=None, flags = 0):
+        inputFileString = open(inputFilePath, 'r').read()
+        
+        result = self.process(inputFileString)
+        
+        if outputFilePath:
+            if (flags & Generator.FLAG_OVERWRITE == 0) and os.path.exists(outputFilePath):
+                raise RuntimeError("File \"%s\" already exists (enable overwriting via FLAG_OVERWRITE)" % outputFilePath)
+            
+            open(outputFilePath, 'w').write(result)
+            
+        return result
         
     def process(self, string):
         # Resulting string
@@ -74,6 +91,13 @@ class Generator:
     def addSearchHandler(self, handler):
         self.__searchHandlers.append( handler )
         
+    def write(self, string):
+        self.__result += string
+        
+    @staticmethod
+    def convert(string):
+        return Generator().process(string)
+    
     def __getIncludeContent(self, file):
         for handler in self.__searchHandlers:
             content = handler.getIncludeContent(file)
@@ -84,11 +108,8 @@ class Generator:
         # None of the handlers         
         return None
     
-    def write(self, string):
-        self.__result += string
-        
     def __processString(self, string):
-        # TODO string preprocessing, such as convertin \r\n to \n etc.
+        # TODO string preprocessing, such as converting \r\n to \n etc.
         return string
     
     def __processTokens(self, tokens):
@@ -162,10 +183,6 @@ class Generator:
     def createContainer(self):
         return ContainerNode(self)
 
-    @staticmethod
-    def convert(string):
-        return Generator().process(string)
-    
     # Types of tokens we're after (order matters!)
     __tokenTypes = [
         # Conditional
