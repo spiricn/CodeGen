@@ -1,5 +1,7 @@
 from Node import *
 from Token import *
+import traceback
+import sys
 
 class EvalNode(Node):
     '''

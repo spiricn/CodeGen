@@ -2,13 +2,14 @@
 ## Code block
 
 
-### Usage:
+### Usage (regular):
 	<% code %>
     
         # Content
     
     <~ code %>
-
+    
+    <% code 'content' %>
 
 ### Example:
 
@@ -19,7 +20,9 @@
 	b = 2
 	c = a + b
 		
-	<~ c %> 
+	<~ c %>
+	
+	<% code c += 4 %> 
 
 -------------------------------------------------------------------------------
 ## Expression evaluation
@@ -33,12 +36,7 @@
 ### Example:
 
 #### Input:
-	<% code %>
-	
-	a = 2 + 2
-	
-	<~ code %>
-	
+	<% code a = 2 + 2 %>
 	
 	Value of a is <= a %>.
 	

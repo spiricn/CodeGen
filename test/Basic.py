@@ -155,6 +155,18 @@ b
 
         self.assertEqual(output, expected)
         
+    def test_inlineCode(self):
+        '''
+        Inline code test.
+        '''
+        
+        input = '<% code a=3 %>Value of a is <= a %>'
+        
+        output = Generator.convert(input)
+        
+        expected = 'Value of a is 3'
+
+        self.assertEqual(output, expected)
         
 if __name__ == '__main__':
     unittest.main()

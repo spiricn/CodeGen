@@ -2,6 +2,14 @@ from ContainerNode import ContainerNode
 from Tokenizer import Tokenizer
 from Token import *
 from TokenType import *
+from WhileLoopToken import WhileLoopToken
+from ConditionalToken import ConditionalToken
+from TextToken import TextToken
+from EvalToken import EvalToken
+from ConditionalToken import ConditionalToken
+from CodeToken import CodeToken
+from IncludeToken import IncludeToken
+from ForLoopToken import ForLoopToken
 import os
 
 class FileSystemIncludeHandler:
@@ -167,12 +175,13 @@ class Generator:
         TokenType('^<~ if %>$', TOKEN_CONDITIONAL_END, ConditionalToken),
         
         # Code
+        TokenType('^<% code .* %>$', TOKEN_CODE_START, CodeToken),
         TokenType('^<% code %>$', TOKEN_CODE_START, CodeToken),
         TokenType('^<~ code %>$', TOKEN_CODE_END, CodeToken),
         
         # For loop
-        TokenType('^<% for .* %>$', TOKEN_FOR_LOOP_START, LoopToken),
-        TokenType('^<~ for %>$', TOKEN_FOR_LOOP_END, LoopToken),
+        TokenType('^<% for .* %>$', TOKEN_FOR_LOOP_START, ForLoopToken),
+        TokenType('^<~ for %>$', TOKEN_FOR_LOOP_END, ForLoopToken),
         
         # Eval
         TokenType('^<= .* %>$', TOKEN_EVAL, EvalToken),

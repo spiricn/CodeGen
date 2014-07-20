@@ -1,5 +1,6 @@
 from Node import *
 from Token import *
+import sys
 
 class CodeNode(Node):
     '''
@@ -9,18 +10,32 @@ class CodeNode(Node):
     def __init__(self, context, tokens):
         Node.__init__(self, context, NODE_CODE)
         
-        start, self.code, end = tokens[:3]
-
-        # TODO an error message        
-        assert(start.type == TOKEN_CODE_START and self.code.type == TOKEN_TEXT and end.type == TOKEN_CODE_END)
+        start = tokens[0]
         
-        tokens.pop(0)
-        tokens.pop(0)
-        tokens.pop(0)
+        # Sanity check
+        assert( start.type == TOKEN_CODE_START )
+        
+        if start.inlineCode:
+            self.inline = True
+            
+            tokens.pop(0)
+            self.code = start.inlineCode
+        else:
+            self.inline = False
+            self.code, end = tokens[1:3]
+    
+            # TODO an error message        
+            assert(self.code.type == TOKEN_TEXT and end.type == TOKEN_CODE_END)
+            
+            tokens.pop(0)
+            tokens.pop(0)
+            tokens.pop(0)
         
     def execute(self):
         try:
-            exec(self.code.body, self.context.workspace)
+            code = self.code.body if not self.inline else self.code
+            
+            exec(code, self.context.workspace)
         except Exception as e:
             print('Error executing expression "%s"; reason %s' % (self.code.body, e))
             traceback.print_exc(file=sys.stdout)

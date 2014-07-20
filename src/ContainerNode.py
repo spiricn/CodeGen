@@ -47,6 +47,7 @@ class ContainerNode(Node):
         elif token.type == TOKEN_WHILE_LOOP_START:
             self.children.append( WhileLoopNode(self.context, tokens) )
         else:
+            print('Unhandled token type %d' % token.type)
             assert(0)
     
     def __str__(self):
