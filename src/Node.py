@@ -1,12 +1,13 @@
 # Possible node types
-NODE_TEXT, \
-NODE_CODE, \
-NODE_CONDITIONAL, \
-NODE_EVAL, \
-NODE_LOOP, \
-NODE_CONTAINER, \
-NODE_WHILE_LOOP, \
-= range(7)
+NODE_TEXT,          \
+NODE_CODE,          \
+NODE_CONDITIONAL,   \
+NODE_EVAL,          \
+NODE_LOOP,          \
+NODE_CONTAINER,     \
+NODE_WHILE_LOOP,    \
+NODE_FUNCTION,      \
+= range(8)
 
 class Node(object):
     '''

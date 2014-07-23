@@ -4,7 +4,9 @@ from CodeNode import CodeNode
 from ConditionalNode import ConditionalNode
 from EvalNode import EvalNode
 from ForLoopNode import ForLoopNode
-from WhileLoopNode import WhileLoopNode 
+from WhileLoopNode import WhileLoopNode
+from FunctionDefNode import FunctionDefNode
+from FunctionCallNode import FunctionCallNode 
 from Token import *
 
 class ContainerNode(Node):
@@ -46,6 +48,13 @@ class ContainerNode(Node):
             
         elif token.type == TOKEN_WHILE_LOOP_START:
             self.children.append( WhileLoopNode(self.context, tokens) )
+            
+        elif token.type == TOKEN_FUNCTION_BEGIN:
+            self.children.append( FunctionDefNode(self.context, tokens) )
+            
+        elif token.type == TOKEN_FUNCTION_CALL:
+            self.children.append( FunctionCallNode(self.context, tokens) )
+            
         else:
             print('Unhandled token type %d' % token.type)
             assert(0)

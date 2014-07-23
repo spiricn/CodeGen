@@ -10,6 +10,7 @@ from ConditionalToken import ConditionalToken
 from CodeToken import CodeToken
 from IncludeToken import IncludeToken
 from ForLoopToken import ForLoopToken
+from FunctionToken import FunctionToken
 import os
 
 class FileSystemIncludeHandler:
@@ -46,6 +47,8 @@ class Generator:
         self.__fileIncludeHandler = FileSystemIncludeHandler()
         
         self.__searchHandlers = [ self.__fileIncludeHandler ]
+        
+        self.__functions = {}
         
     def processFile(self, inputFilePath, outputFilePath=None, flags = 0):
         inputFileString = open(inputFilePath, 'r').read()
@@ -182,6 +185,15 @@ class Generator:
         
     def createContainer(self):
         return ContainerNode(self)
+    
+    def addFunction(self, name, node):
+        self.__functions[name] = node
+    
+    def getFunction(self, name):
+        if name not in self.__functions:
+            raise RuntimeError('Function \"%s\" does not exist' % name)
+        
+        return self.__functions[name]
 
     # Types of tokens we're after (order matters!)
     __tokenTypes = [
@@ -209,6 +221,12 @@ class Generator:
         # While loop
         TokenType('^<% while .* %>$', TOKEN_WHILE_LOOP_START, WhileLoopToken),
         TokenType('^<~ while %>$', TOKEN_WHILE_LOOP_END, WhileLoopToken),
+        
+        # Functions
+        TokenType('<% function [a-zA-Z]{1}[a-zA-Z0-9]*\([a-zA-Z0-9 ,]*\) %>', TOKEN_FUNCTION_BEGIN, FunctionToken),
+        TokenType('<~ function %>', TOKEN_FUNCTION_END, FunctionToken),
+        TokenType('<% call [a-zA-Z]{1}[a-zA-Z0-9]*\([a-zA-Z0-9 ,]*\) %>', TOKEN_FUNCTION_CALL, FunctionToken),
+        
         
         # Text if all else fails
         TokenType('.*', TOKEN_TEXT, TextToken)

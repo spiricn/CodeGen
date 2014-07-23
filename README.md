@@ -151,6 +151,38 @@
 	Value of a is 1
 
 -------------------------------------------------------------------------------
+## Functions
+
+### Usage:
+	<% function name(arg1, arg2, ...) %>
+		# Function body
+	<~ function %>
+	
+	<% call name(value1, value2, ...) %>
+	
+	
+### Example:
+
+#### Input:
+	<% function showList(list) %>
+	
+		<% for c,i in enumerate(list) %>
+			list[<= c %>] = <= i %>
+		<~ for %>
+	
+	<~ function %>
+	
+	
+	<% code someList=['a', 'b', 'c'] %>
+	
+	<% call showList(someList) %>
+	
+#### Output:
+	list[0] = a
+	list[1] = b
+	list[2] = c
+	
+-------------------------------------------------------------------------------
 ## include tag
 
 

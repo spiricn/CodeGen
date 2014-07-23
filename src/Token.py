@@ -7,12 +7,15 @@ TOKEN_CONDITIONAL_IF,   \
 TOKEN_CONDITIONAL_ELIF, \
 TOKEN_CONDITIONAL_ELSE, \
 TOKEN_CONDITIONAL_END,  \
-TOKEN_FOR_LOOP_START,       \
-TOKEN_FOR_LOOP_END,         \
+TOKEN_FOR_LOOP_START,   \
+TOKEN_FOR_LOOP_END,     \
 TOKEN_INCLUDE,          \
-TOKEN_WHILE_LOOP_START,      \
-TOKEN_WHILE_LOOP_END,        \
-= range(14)
+TOKEN_WHILE_LOOP_START, \
+TOKEN_WHILE_LOOP_END,   \
+TOKEN_FUNCTION_BEGIN,   \
+TOKEN_FUNCTION_END,     \
+TOKEN_FUNCTION_CALL,    \
+= range(17)
 
 class Token(object):
     def __init__(self, type, body):
@@ -35,7 +38,9 @@ class Token(object):
          TOKEN_INCLUDE : 'INCLUDE',
          TOKEN_WHILE_LOOP_START : 'WHILE_LOOP_START',
          TOKEN_WHILE_LOOP_END : 'WHILE_LOOP_END',
-         
+         TOKEN_FUNCTION_BEGIN : 'FUNCTION_BEGIN',
+         TOKEN_FUNCTION_END : 'FUNCTION_END',
+         TOKEN_FUNCTION_CALL : 'FUNCTION_CALL',
         }[self.type]
          
     def __str__(self):
