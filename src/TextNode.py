@@ -14,7 +14,7 @@ class TextNode(Node):
         # Sanity check
         assert(self.token.type == TOKEN_TEXT) 
         
-    def execute(self):
+    def execute(self, locals):
         self.context.write( self.token.body )
         
     def __str__(self):

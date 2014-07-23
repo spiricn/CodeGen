@@ -1,6 +1,7 @@
 from Node import *
 from Token import *
 import sys
+import traceback
 
 class CodeNode(Node):
     '''
@@ -23,7 +24,7 @@ class CodeNode(Node):
         else:
             self.inline = False
             self.code, end = tokens[1:3]
-    
+            
             # TODO an error message        
             assert(self.code.type == TOKEN_TEXT and end.type == TOKEN_CODE_END)
             
@@ -31,13 +32,13 @@ class CodeNode(Node):
             tokens.pop(0)
             tokens.pop(0)
         
-    def execute(self):
+    def execute(self, locals):
         try:
             code = self.code.body if not self.inline else self.code
             
             exec(code, self.context.workspace)
         except Exception as e:
-            print('Error executing expression "%s"; reason %s' % (self.code.body, e))
+            print('Error executing expression; reason %s' % (e))
             traceback.print_exc(file=sys.stdout)
             raise
         

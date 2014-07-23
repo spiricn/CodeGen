@@ -24,14 +24,15 @@ class FunctionDefNode(Node):
         
         self.context.addFunction(self.header.name, self)
         
-    def call(self, args):
+    def call(self, args, locals):
+        l = {}
         # Expose arguments
         for c, arg in enumerate(args):
-            self.context.workspace[ self.header.params[c] ] = eval(arg, self.context.workspace)
+            l[ self.header.params[c] ] = eval(arg, self.context.workspace, locals)
             
         # Execute body
-        self.body.execute()            
+        self.body.execute(l)            
         
-    def execute(self):
+    def execute(self, locals):
         pass
         

@@ -1,5 +1,6 @@
 from Generator import *
 import unittest
+from Utils import *
 
 class Basic(unittest.TestCase):
     def setUp(self):
@@ -166,6 +167,22 @@ b
         
         expected = 'Value of a is 3'
 
+        self.assertEqual(output, expected)
+        
+    def test_basicFunction(self):
+        '''
+        Basic function clal test.
+        '''
+
+        input = '''\
+<% function test(arg1, arg2) %>
+Function result: arg1=<= arg1 %> , arg2=<= arg2 %><~ function %>
+<% call test(2, 3) %>'''
+        
+        output = Generator.convert(input)
+        
+        expected = 'Function result: arg1=2 , arg2=3'
+        
         self.assertEqual(output, expected)
         
 if __name__ == '__main__':

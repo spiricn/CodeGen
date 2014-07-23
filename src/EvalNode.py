@@ -16,10 +16,10 @@ class EvalNode(Node):
         # Sanity check
         assert(self.token.type == TOKEN_EVAL)
         
-    def execute(self):
+    def execute(self, locals):
         try:
             # Try to evaluate the expression
-            self.context.write( str( eval(self.token.expression, self.context.workspace) ) )
+            self.context.write( str( eval(self.token.expression, self.context.workspace, locals) ) )
         except Exception as e:
             # Expression could not be evalulated
             print('Error evaluating expression "%s"; reason: %s' % (self.token.expression, e))

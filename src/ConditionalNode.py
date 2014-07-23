@@ -51,7 +51,7 @@ class ConditionalNode(Node):
                 # Consume condition body
                 conditionBody.addChild( tokens )
 
-    def execute(self):
+    def execute(self, locals):
         passed = None
         
         for condition in self.conditions:
@@ -63,7 +63,7 @@ class ConditionalNode(Node):
                 passed = condition
                 break
             # Evaluate a condition
-            elif eval(condition.token.query, self.context.workspace):
+            elif eval(condition.token.query, self.context.workspace, locals):
                 # Condition passed
                 passed = condition
                 break
@@ -73,7 +73,7 @@ class ConditionalNode(Node):
             return
         
         # Execute body
-        condition.node.execute()
+        condition.node.execute(locals)
     
     def __str__(self):
         return '<ConditionalNode>'

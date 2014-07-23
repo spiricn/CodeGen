@@ -24,9 +24,9 @@ class WhileLoopNode(Node):
             else:
                 self.body.addChild( tokens )
         
-    def execute(self):
-        while eval(self.startToken.condition, self.context.workspace):
-            self.body.execute()
+    def execute(self, locals):
+        while eval(self.startToken.condition, self.context.workspace, locals):
+            self.body.execute(locals)
         
     def __str__(self):
         return '<TextNode>'

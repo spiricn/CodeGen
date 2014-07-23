@@ -20,9 +20,9 @@ class ContainerNode(Node):
         self.children = []
         
             
-    def execute(self):
+    def execute(self, locals={}):
         for child in self.children:
-            child.execute()
+            child.execute(locals)
             
     def createChildren(self, tokens):
         while len(tokens):

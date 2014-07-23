@@ -10,5 +10,5 @@ class FunctionCallNode(Node):
         
         assert(self.header.type == TOKEN_FUNCTION_CALL)
         
-    def execute(self):
-        self.context.getFunction(self.header.name).call(self.header.params)
+    def execute(self, locals):
+        self.context.getFunction(self.header.name).call(self.header.params, locals)

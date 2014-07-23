@@ -131,7 +131,8 @@ array[<= c %>] = <= i %><~ for %>
         g.processFile( os.path.join(RESOURCE_DIR, 'test_template_1.py'), outPath)
         
         # Read the contents of the created file
-        result = open(outPath, 'r').read() 
+        with open(outPath, 'r') as file:
+            result = file.read() 
         
         expected = 'Value of a is 42'
         
@@ -174,7 +175,8 @@ array[<= c %>] = <= i %><~ for %>
             self.fail("File not overrwriten after specifying overwrite flag")
         
         # Read the contents of the created file
-        result = open(outPath, 'r').read() 
+        with open(outPath, 'r') as file:
+            result = file.read() 
          
         expected = 'Value of a is 42'
          

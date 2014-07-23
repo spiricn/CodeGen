@@ -28,21 +28,21 @@ class ForLoopNode(Node):
                 
         self.body = n
         
-    def execute(self):
+    def execute(self, locals):
         # List of loop variables (i.e. in <% for a,b,c in D > the list will be ['a','b','c'])
         varList = self.loop.vars.split(',')
          
         loopCode = ''
         
         # Create loop header
-        loopCode += 'for %s in eval("%s", self.context.workspace):\n' % (self.loop.vars, self.loop.container)
+        loopCode += 'for %s in eval("%s", self.context.workspace, locals):\n' % (self.loop.vars, self.loop.container)
         
         # Expose loop variables
         for var in varList:
-            loopCode += "\tself.context.workspace['%s'] = %s\n" % (var, var) 
+            loopCode += "\tlocals['%s'] = %s\n" % (var, var) 
      
         # Loop body execution code
-        loopCode += '\tself.body.execute()'
+        loopCode += '\tself.body.execute(locals)'
 
 
         # Execute the loop        

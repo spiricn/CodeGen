@@ -51,7 +51,8 @@ class Generator:
         self.__functions = {}
         
     def processFile(self, inputFilePath, outputFilePath=None, flags = 0):
-        inputFileString = open(inputFilePath, 'r').read()
+        with open(inputFilePath, 'r') as file:
+            inputFileString = file.read()
         
         result = self.process(inputFileString)
         
@@ -59,7 +60,8 @@ class Generator:
             if (flags & Generator.FLAG_OVERWRITE == 0) and os.path.exists(outputFilePath):
                 raise RuntimeError("File \"%s\" already exists (enable overwriting via FLAG_OVERWRITE)" % outputFilePath)
             
-            open(outputFilePath, 'w').write(result)
+            with open(outputFilePath, 'w') as file: 
+                file.write(result)
             
         return result
         
@@ -133,7 +135,9 @@ class Generator:
             token = tokens[0]
             if prevToken and (prevToken.type in [TOKEN_CODE_END, TOKEN_CONDITIONAL_END, TOKEN_CONDITIONAL_IF, \
                                                  TOKEN_CONDITIONAL_ELSE, TOKEN_CONDITIONAL_ELIF, TOKEN_FOR_LOOP_START, \
-                                                 TOKEN_FOR_LOOP_END, TOKEN_INCLUDE, TOKEN_WHILE_LOOP_START, TOKEN_WHILE_LOOP_END]):
+                                                 TOKEN_FOR_LOOP_END, TOKEN_INCLUDE, TOKEN_WHILE_LOOP_START, TOKEN_WHILE_LOOP_END,
+                                                 TOKEN_FUNCTION_END, TOKEN_FUNCTION_CALL, TOKEN_FUNCTION_BEGIN
+                                                 ]):
                 if token.type == TOKEN_TEXT:
                     if token.body == '\n':
                         # Remove the token
