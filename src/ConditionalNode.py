@@ -56,7 +56,6 @@ class ConditionalNode(Node):
         
         for condition in self.conditions:
             if condition.token.type == TOKEN_CONDITIONAL_END:
-                print('a')
                 # None of the conditions passed
                 break
             elif condition.token.type == TOKEN_CONDITIONAL_ELSE:
