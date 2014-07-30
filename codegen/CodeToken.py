@@ -1,4 +1,4 @@
-from Token import *
+from codegen.Token import *
 
 class CodeToken(Token):
     def __init__(self, type, body):

@@ -1,5 +1,5 @@
-from Node import *
-from Token import *
+from codegen.Node import *
+from codegen.Token import *
 
 class Condition(object):
     def __init__(self, token, node):

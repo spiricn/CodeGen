@@ -1,5 +1,5 @@
-from Node import *
-from Token import *
+from codegen.Node import *
+from codegen.Token import *
 
 class FunctionDefNode(Node):
     def __init__(self, context, tokens):

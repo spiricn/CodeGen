@@ -1,5 +1,5 @@
-from ContainerNode import *
-from Token import *
+from codegen.ContainerNode import *
+from codegen.Token import *
 
 class ForLoopNode(Node):
     '''

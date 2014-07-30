@@ -1,16 +1,16 @@
-from ContainerNode import ContainerNode
-from Tokenizer import Tokenizer
-from Token import *
-from TokenType import *
-from WhileLoopToken import WhileLoopToken
-from ConditionalToken import ConditionalToken
-from TextToken import TextToken
-from EvalToken import EvalToken
-from ConditionalToken import ConditionalToken
-from CodeToken import CodeToken
-from IncludeToken import IncludeToken
-from ForLoopToken import ForLoopToken
-from FunctionToken import FunctionToken
+from codegen.ContainerNode import ContainerNode
+from codegen.Tokenizer import Tokenizer
+from codegen.Token import *
+from codegen.TokenType import *
+from codegen.WhileLoopToken import WhileLoopToken
+from codegen.ConditionalToken import ConditionalToken
+from codegen.TextToken import TextToken
+from codegen.EvalToken import EvalToken
+from codegen.ConditionalToken import ConditionalToken
+from codegen.CodeToken import CodeToken
+from codegen.IncludeToken import IncludeToken
+from codegen.ForLoopToken import ForLoopToken
+from codegen.FunctionToken import FunctionToken
 import os
 
 class FileSystemIncludeHandler:

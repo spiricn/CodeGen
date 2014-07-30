@@ -1,4 +1,4 @@
-from Token import *
+from codegen.Token import *
 
 class Tokenizer:
     def __init__(self, string, tokenTypes):

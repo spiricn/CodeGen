@@ -1,4 +1,4 @@
-from Generator import *
+from codegen.Generator import *
 import unittest
 
 class Nesting(unittest.TestCase):

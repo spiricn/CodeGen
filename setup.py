@@ -7,6 +7,6 @@ setup(name='CodeGen',
       description='Code generator tool',
       author='Nikola Spiric',
       author_email='nikola.spiric.ns@gmail.com',
-      package_dir={'codegen' : 'src'},
+      package_dir={'codegen' : 'codegen'},
       packages=['codegen'],
 )

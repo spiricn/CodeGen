@@ -1,4 +1,4 @@
-from Token import *
+from codegen.Token import *
 
 class ForLoopToken(Token):
     def __init__(self, type, body):

@@ -1,13 +1,13 @@
-from Node import *
-from TextNode import TextNode
-from CodeNode import CodeNode
-from ConditionalNode import ConditionalNode
-from EvalNode import EvalNode
-from ForLoopNode import ForLoopNode
-from WhileLoopNode import WhileLoopNode
-from FunctionDefNode import FunctionDefNode
-from FunctionCallNode import FunctionCallNode 
-from Token import *
+from codegen.Node import *
+from codegen.TextNode import TextNode
+from codegen.CodeNode import CodeNode
+from codegen.ConditionalNode import ConditionalNode
+from codegen.EvalNode import EvalNode
+from codegen.ForLoopNode import ForLoopNode
+from codegen.WhileLoopNode import WhileLoopNode
+from codegen.FunctionDefNode import FunctionDefNode
+from codegen.FunctionCallNode import FunctionCallNode 
+from codegen.Token import *
 
 class ContainerNode(Node):
     '''

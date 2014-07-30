@@ -1,6 +1,6 @@
-from Generator import *
+from codegen.Generator import *
+from codegen.Utils import *
 import unittest
-from Utils import *
 
 class Basic(unittest.TestCase):
     def setUp(self):
