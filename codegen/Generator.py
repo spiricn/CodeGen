@@ -50,6 +50,9 @@ class Generator:
         
         self.__functions = {}
         
+        self.workspace['CONTEXT'] = self
+        
+        
     def processFile(self, inputFilePath, outputFilePath=None, flags = 0):
         with open(inputFilePath, 'r') as file:
             inputFileString = file.read()
@@ -99,6 +102,14 @@ class Generator:
     def write(self, string):
         self.__result += string
         
+    def execute(self, path):
+        code = self.__getIncludeContent(path)
+        
+        if code == None:
+            raise RuntimeError('Error getting content from location \"%s\"' % path)
+        
+        exec(code, self.workspace)
+        
     @staticmethod
     def convert(string):
         return Generator().process(string)
@@ -114,8 +125,19 @@ class Generator:
         return None
     
     def __processString(self, string):
-        # TODO string preprocessing, such as converting \r\n to \n etc.
-        return string
+        string = string.replace('\r\n', '\n')
+        
+        res = ''
+        
+        i = 0
+        while i < len(string):
+            if i != len(string)-1 and ( string[i] == '\\' and string[i+1] == '\n' ):
+                i += 2
+            else:
+                res += string[i]
+                i += 1
+
+        return res
     
     def __processTokens(self, tokens):
         '''
