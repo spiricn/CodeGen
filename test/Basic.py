@@ -171,7 +171,7 @@ b
         
     def test_basicFunction(self):
         '''
-        Basic function clal test.
+        Basic function call test.
         '''
 
         input = '''\
@@ -184,6 +184,40 @@ Function result: arg1=<= arg1 %> , arg2=<= arg2 %><~ function %>
         expected = 'Function result: arg1=2 , arg2=3'
         
         self.assertEqual(output, expected)
+        
+    def test_newLineEscaping(self):
+        '''
+        New line escaping test.
+        '''
+        
+        input = '''\
+first\\
+second\\
+third\\
+'''
+
+        output = Generator.convert(input)
+        
+        expected = 'firstsecondthird'
+        
+        self.assertEqual(output, expected);
+        
+    def test_whiteSpaceEscaping(self):
+        '''
+        White space escaping test.
+        '''
+        
+        input = '''\
+\\    \tfirst\\
+\\    second\\
+\\  third\\
+'''
+        
+        output = Generator.convert(input)
+        
+        expected = 'firstsecondthird'
+        
+        self.assertEqual(output, expected);
         
 if __name__ == '__main__':
     unittest.main()

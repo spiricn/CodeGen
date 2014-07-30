@@ -11,31 +11,8 @@ from codegen.CodeToken import CodeToken
 from codegen.IncludeToken import IncludeToken
 from codegen.ForLoopToken import ForLoopToken
 from codegen.FunctionToken import FunctionToken
+from codegen.FileSystemIncludeHandler import FileSystemIncludeHandler
 import os
-
-class FileSystemIncludeHandler:
-    def __init__(self):
-        self.__locations = []
-        
-    def addSearchPath(self, location):
-        self.__locations.append( location )
-        
-    def getIncludeContent(self, file):
-        for location in self.__locations:
-            for directory, dirNames, fileNames in os.walk(location):
-                for i in fileNames:
-                    if i == file:
-                        file = open(os.path.join(directory, i), 'r')
-                        
-                        content = file.read()
-                        
-                        file.close()
-                        
-                        return content
-
-        return None
-    
-    
     
 class Generator:
     FLAG_OVERWRITE = 1 << 0
@@ -125,19 +102,25 @@ class Generator:
         return None
     
     def __processString(self, string):
+        # We're just using \n instead of \r\n
         string = string.replace('\r\n', '\n')
         
         res = ''
         
-        i = 0
-        while i < len(string):
-            if i != len(string)-1 and ( string[i] == '\\' and string[i+1] == '\n' ):
-                i += 2
-            else:
-                res += string[i]
-                i += 1
-
-        return res
+        r = re.compile('[^ \t]')
+        
+        for line in string.split('\n'):
+            if line.startswith('\\'):
+                match = r.search(line[1:])
+                if match:
+                    line = line[1:][match.span()[0]:]
+                    
+            res += '%s\n' % line
+            
+        # Escaped new lines
+        res = res.replace('\\\n', '')
+                
+        return res[:-1]
     
     def __processTokens(self, tokens):
         '''

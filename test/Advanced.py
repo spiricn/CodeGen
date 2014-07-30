@@ -98,6 +98,7 @@ array = ['a', 'b', 'c']
 array[<= c %>] = <= i %><~ for %>
 '''
 
+        # FIXME for some reason this line is causing test_eval from Basic.py to fail
         output = Generator.convert(input)
                 
         expected = 'array[0] = aarray[1] = barray[2] = c'
