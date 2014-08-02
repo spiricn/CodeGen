@@ -12,25 +12,43 @@ from codegen.IncludeToken import IncludeToken
 from codegen.ForLoopToken import ForLoopToken
 from codegen.FunctionToken import FunctionToken
 from codegen.FileSystemIncludeHandler import FileSystemIncludeHandler
+from codegen.Processor import Processor
 import os
     
 class Generator:
+    '''
+    Flags used by the 'processFile' method
+    '''
     FLAG_OVERWRITE = 1 << 0
     
     def __init__(self):
         # Code workspace
         self.workspace = {}
         
-        self.__fileIncludeHandler = FileSystemIncludeHandler()
-        
-        self.__searchHandlers = [ self.__fileIncludeHandler ]
-        
+        # Functtion name->node map
         self.__functions = {}
         
+        # Global workspace of the generator
         self.workspace['CONTEXT'] = self
         
+        # Processor used to covnert source to tokens
+        self.__processor = Processor()
+        
+    ###########################################################################
+    # Public API
+    ###########################################################################
         
     def processFile(self, inputFilePath, outputFilePath=None, flags = 0):
+        '''
+        Processes an input file and returns the processes string (and if needed stores the result in another file)
+        
+        @param inputFilePath: File containing the input source code.
+        @param outputFilePath: Optional parameter; if provided the resulting string is stored in this location.
+        @param flags: Optional parameter; File writing flags.
+        
+        @return: Resulting processed string.
+        '''
+         
         with open(inputFilePath, 'r') as file:
             inputFileString = file.read()
         
@@ -45,22 +63,44 @@ class Generator:
             
         return result
         
+    def addSearchPath(self, path):
+        '''
+        Adds a search location on the local drive. This location is searched for file content
+        in <% include %> commands and 'execute' method calls
+        
+        @param path: Directory location.
+        '''
+        
+        if not os.path.exists(path) or not os.path.isdir(path):
+            raise RuntimeError('Invalid directory path \"%s\"' % path)
+        
+        self.__processor.addSearchPath( path )
+        
+    def addSearchHandler(self, handler):
+        '''
+        Custom user content include handler.
+        
+        @param handler: Include handler object
+        '''
+        
+        self.__processor.addSearchHandler( handler )
+        
     def process(self, string):
+        '''
+        Process a string in the context of this generator.
+        
+        @param string: A string to be processed.
+        
+        @return: Processed string.
+        '''
+         
         # Resulting string
         self.__result = ''
         
         # Create a root node
         rootNode = ContainerNode(self)
-        
-        string = self.__processString(string)
-        
-        self.tokenizer = Tokenizer(string, Generator.__tokenTypes)
-        
-        tokens = self.tokenizer.getAll()
-        
-        tokens = self.__processIncludes( tokens )
-        
-        tokens = self.__processTokens( tokens )
+
+        tokens = self.__processor.getSourceTokens(string)
         
         # Create the initial children from tokens
         rootNode.createChildren( tokens )
@@ -70,16 +110,38 @@ class Generator:
         
         return self.__result
     
-    def addSearchPath(self, path):
-        self.__fileIncludeHandler.addSearchPath( path )
+    @staticmethod
+    def convert(string):
+        '''
+        Processes an input string.
         
-    def addSearchHandler(self, handler):
-        self.__searchHandlers.append( handler )
+        @param string: Input string.
+        
+        @return: Processed input string.
+        '''
+         
+        return Generator().process(string)
+    
+    ###########################################################################
+    # API meant to be used from inside the code
+    ########################################################################### 
         
     def write(self, string):
+        '''
+        Write a string to the result buffer. Inteded to be used from within source code.
+        
+        @param string: String to be written.
+        '''
+        
         self.__result += string
         
     def execute(self, path):
+        '''
+        Execute a file in the generator's workspace.
+        
+        @param path: File name containing the source code.
+        '''
+        
         code = self.__getIncludeContent(path)
         
         if code == None:
@@ -87,110 +149,9 @@ class Generator:
         
         exec(code, self.workspace)
         
-    @staticmethod
-    def convert(string):
-        return Generator().process(string)
-    
-    def __getIncludeContent(self, file):
-        for handler in self.__searchHandlers:
-            content = handler.getIncludeContent(file)
-            
-            if content != None:
-                return content
-
-        # None of the handlers         
-        return None
-    
-    def __processString(self, string):
-        # We're just using \n instead of \r\n
-        string = string.replace('\r\n', '\n')
-        
-        res = ''
-        
-        r = re.compile('[^ \t]')
-        
-        for line in string.split('\n'):
-            if line.startswith('\\'):
-                match = r.search(line[1:])
-                if match:
-                    line = line[1:][match.span()[0]:]
-                    
-            res += '%s\n' % line
-            
-        # Escaped new lines
-        res = res.replace('\\\n', '')
-                
-        return res[:-1]
-    
-    def __processTokens(self, tokens):
-        '''
-        A generic processing pass. Does things like removing \n after various blocks
-        
-        @param tokens: Tokens to preform the pass on.
-        
-        @return: Processed token list
-        '''
-        processed = []
-        
-        prevToken = None
-        
-        while len(tokens):
-            keep = True
-            
-            token = tokens[0]
-            if prevToken and (prevToken.type in [TOKEN_CODE_END, TOKEN_CONDITIONAL_END, TOKEN_CONDITIONAL_IF, \
-                                                 TOKEN_CONDITIONAL_ELSE, TOKEN_CONDITIONAL_ELIF, TOKEN_FOR_LOOP_START, \
-                                                 TOKEN_FOR_LOOP_END, TOKEN_INCLUDE, TOKEN_WHILE_LOOP_START, TOKEN_WHILE_LOOP_END,
-                                                 TOKEN_FUNCTION_END, TOKEN_FUNCTION_CALL, TOKEN_FUNCTION_BEGIN
-                                                 ]):
-                if token.type == TOKEN_TEXT:
-                    if token.body == '\n':
-                        # Remove the token
-                        keep = False
-                    elif token.body[0] == '\n':
-                        token.body = token.body[1:]
-                
-            prevToken = token
-            tokens.pop(0)
-            if keep:
-                processed.append(token)
-
-        return processed
-
-    def __processIncludes(self, tokens):
-        '''
-        Preforms a recursive "include" pass on given list of tokens
-        
-        @param tokens: Tokens to preform the pass on.
-        
-        @return: Processed token list
-        '''
-        
-        processed = []
-        
-        for token in tokens:
-            if token.type == TOKEN_INCLUDE:
-                content = self.__getIncludeContent( token.file )
-                
-                if content == None:
-                    raise RuntimeError('Include "%s" not found' % token.file)
-                    
-                    continue
-                
-                self.tokenizer.string = content
-                
-                included = self.tokenizer.getAll() 
-                
-                # Process for more includes
-                included = self.__processIncludes( included )
-                
-                for i in included:
-                    processed.append( i )
-                    
-            else:
-                processed.append(token)
-        
-        return processed
+    ###########################################################################
+    # Internal API used by  Code Nodes
+    ###########################################################################
         
     def createContainer(self):
         return ContainerNode(self)
@@ -204,40 +165,6 @@ class Generator:
         
         return self.__functions[name]
 
-    # Types of tokens we're after (order matters!)
-    __tokenTypes = [
-        # Conditional
-        TokenType('^<% if .* %>$', TOKEN_CONDITIONAL_IF, ConditionalToken),
-        TokenType('^<% else %>$', TOKEN_CONDITIONAL_ELSE, ConditionalToken),
-        TokenType('^<% elif .* %>$', TOKEN_CONDITIONAL_ELIF, ConditionalToken),
-        TokenType('^<~ if %>$', TOKEN_CONDITIONAL_END, ConditionalToken),
-        
-        # Code
-        TokenType('^<% code .* %>$', TOKEN_CODE_START, CodeToken),
-        TokenType('^<% code %>$', TOKEN_CODE_START, CodeToken),
-        TokenType('^<~ code %>$', TOKEN_CODE_END, CodeToken),
-        
-        # For loop
-        TokenType('^<% for .* %>$', TOKEN_FOR_LOOP_START, ForLoopToken),
-        TokenType('^<~ for %>$', TOKEN_FOR_LOOP_END, ForLoopToken),
-        
-        # Eval
-        TokenType('^<= .* %>$', TOKEN_EVAL, EvalToken),
-        
-        # Include
-        TokenType('^<% include .* %>$', TOKEN_INCLUDE, IncludeToken),
-        
-        # While loop
-        TokenType('^<% while .* %>$', TOKEN_WHILE_LOOP_START, WhileLoopToken),
-        TokenType('^<~ while %>$', TOKEN_WHILE_LOOP_END, WhileLoopToken),
-        
-        # Functions
-        TokenType('<% function [a-zA-Z]{1}[a-zA-Z0-9]*\([a-zA-Z0-9 ,]*\) %>', TOKEN_FUNCTION_BEGIN, FunctionToken),
-        TokenType('<~ function %>', TOKEN_FUNCTION_END, FunctionToken),
-        TokenType('<% call [a-zA-Z]{1}[a-zA-Z0-9]*\([a-zA-Z0-9 ,]*\) %>', TOKEN_FUNCTION_CALL, FunctionToken),
-        
-        
-        # Text if all else fails
-        TokenType('.*', TOKEN_TEXT, TextToken)
-    ]
+    ###########################################################################
+   
     
