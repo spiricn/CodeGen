@@ -10,8 +10,8 @@ class TokenType(object):
     def matches(self, string):
         return self.regex.match(string) != None
     
-    def instantiate(self, body):
-        return self.tokenClass(self.tokenType, body)
+    def instantiate(self, body, template, sourceLocation):
+        return self.tokenClass(self.tokenType, body, template, sourceLocation)
     
     def __str__(self):
         return '<TokenType type=%d ; regex="%s">' % (self.tokenType, self.regex)

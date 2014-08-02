@@ -12,6 +12,7 @@ from codegen.IncludeToken import IncludeToken
 from codegen.ForLoopToken import ForLoopToken
 from codegen.FunctionToken import FunctionToken
 from codegen.FileSystemIncludeHandler import FileSystemIncludeHandler
+from codegen.Template import Template
 
 class Processor(object):
     def __init__(self):
@@ -25,17 +26,19 @@ class Processor(object):
     def addSearchHandler(self, handler):
         self.__searchHandlers.append( handler )
         
-    def getSourceTokens(self, source):
+    def getSourceTemplate(self, inputSource):
         # String based preprocessing pass
-        source = self.__preprocessSourceString(source)
+        source = self.__preprocessSourceString(inputSource)
+        
+        template = Template(source)
         
         # Tokenize string
-        tokens = Tokenizer.tokenize(source, Processor.__tokenTypes)
+        template.tokens = Tokenizer.tokenize(template, Processor.__tokenTypes)
         
         # Token based preprocessing pass 
-        tokens = self.__preprocessTokens( tokens )
+        template.tokens = self.__preprocessTokens( template.tokens )
         
-        return tokens
+        return template 
         
     ###########################################################################
     
@@ -120,7 +123,7 @@ class Processor(object):
                     
                     continue
                 
-                included = self.getSourceTokens(content)
+                included = self.getSourceTemplate(content).tokens
                 
                 for i in included:
                     processed.append( i )

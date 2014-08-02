@@ -100,10 +100,10 @@ class Generator:
         # Create a root node
         rootNode = ContainerNode(self)
 
-        tokens = self.__processor.getSourceTokens(string)
+        template = self.__processor.getSourceTemplate(string)
         
         # Create the initial children from tokens
-        rootNode.createChildren( tokens )
+        rootNode.createChildren( template.tokens )
         
         # Execute the root node
         rootNode.execute()

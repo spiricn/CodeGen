@@ -18,9 +18,11 @@ TOKEN_FUNCTION_CALL,    \
 = range(17)
 
 class Token(object):
-    def __init__(self, type, body):
+    def __init__(self, type, body, template, sourceLocation):
         self.type = type
         self.body = body
+        self.template = template
+        self.sourceLocation = sourceLocation
         
     def getTypeName(self):
         return {

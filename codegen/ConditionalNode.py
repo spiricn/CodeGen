@@ -13,17 +13,23 @@ class ConditionalNode(Node):
     
     def __init__(self, context, tokens):
         Node.__init__(self, context, NODE_CONDITIONAL)
+        
         self.conditions = []
         
         conditionHeader = tokens[0]
-        
         tokens.pop(0)
+        
+        # Sanity check
+        assert(conditionHeader.type == TOKEN_CONDITIONAL_IF)
         
         conditionBody = self.context.createContainer()
         
         processedEnd = False
         
         while not processedEnd:
+            if not tokens:
+                raise RuntimeError('<~ if %> token missing for token "%s"' % str(conditionHeader))
+            
             token = tokens[0]
             
             conditionEnd = False

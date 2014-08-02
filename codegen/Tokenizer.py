@@ -1,9 +1,10 @@
 from codegen.Token import *
 
 class Tokenizer:
-    def __init__(self, string, tokenTypes):
-        self.string = string
+    def __init__(self, template, tokenTypes):
         self.tokenTypes = tokenTypes
+        self.template = template
+        self.string = template.source
         
     def next(self):
         '''
@@ -31,12 +32,12 @@ class Tokenizer:
         return res
     
     @staticmethod
-    def tokenize(string, tokenTypes):
+    def tokenize(template, tokenTypes):
         '''
         Tokenizes an entire string.
         @return: List of all tokens the string contains
         '''
-        return Tokenizer(string, tokenTypes).getAll()
+        return Tokenizer(template, tokenTypes).getAll()
     
     def getAll(self):
         tokens = []
@@ -59,6 +60,8 @@ class Tokenizer:
         '''
         tokens = []
         
+        currIdx = 0
+        
         while numTokens and len(self.string):
             cmd = self.__matchCommand(self.string, 0)
             
@@ -76,7 +79,7 @@ class Tokenizer:
 
             for entry in self.tokenTypes:
                 if entry.matches(body):
-                    token = entry.instantiate(body)
+                    token = entry.instantiate(body, self.template, [currIdx, currIdx + len(body)])
                     break
                 
             if token == None:
@@ -85,6 +88,8 @@ class Tokenizer:
             tokens.append( token )
             
             self.string = self.string[len(token.body):]
+            
+            currIdx += len(token.body)
             
             numTokens -= 1
             
