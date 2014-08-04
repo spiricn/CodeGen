@@ -116,7 +116,7 @@ class Processor(object):
         
         for token in tokens:
             if token.type == TOKEN_INCLUDE:
-                content = self.__getIncludeContent( token.file )
+                content = self.getIncludeContent( token.file )
                 
                 if content == None:
                     raise RuntimeError('Include "%s" not found' % token.file)
@@ -133,7 +133,7 @@ class Processor(object):
         
         return processed
     
-    def __getIncludeContent(self, file):
+    def getIncludeContent(self, file):
         for handler in self.__searchHandlers:
             content = handler.getIncludeContent(file)
             

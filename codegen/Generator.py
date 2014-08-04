@@ -141,8 +141,8 @@ class Generator:
         
         @param path: File name containing the source code.
         '''
-        
-        code = self.__getIncludeContent(path)
+
+        code = self.__processor.getIncludeContent(path)
         
         if code == None:
             raise RuntimeError('Error getting content from location \"%s\"' % path)
