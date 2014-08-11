@@ -135,6 +135,7 @@ class Processor(object):
     
     def getIncludeContent(self, file):
         for handler in self.__searchHandlers:
+            
             content = handler.getIncludeContent(file)
             
             if content != None:

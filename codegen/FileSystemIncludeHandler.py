@@ -13,8 +13,10 @@ class FileSystemIncludeHandler:
                 for i in fileNames:
                     if i == file:
                         file = open(os.path.join(directory, i), 'r')
-                        
+                                                
                         content = file.read()
+                        
+                        content = content.replace('\r', '')
                         
                         file.close()
                         
